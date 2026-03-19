@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LUMIÈRE — Women's Fashion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream: #faf8f5; --warm-white: #f5f2ee; --blush: #e8d5cb;
+      --rose: #c9856a; --deep-rose: #a0614a; --charcoal: #2c2c2c;
+      --mid-gray: #6b6b6b; --light-gray: #d8d5d0;
+      --font-serif: 'Cormorant Garamond', serif; --font-sans: 'Inter', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-sans); background: var(--cream); color: var(--charcoal); overflow-x: hidden; }
+    .page { display: none; min-height: 100vh; }
+    .page.active { display: block; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(250,248,245,0.96); backdrop-filter: blur(12px); border-bottom: 1px solid var(--light-gray); display: flex; align-items: center; justify-content: space-between; padding: 0 5%; height: 68px; }
+    .nav-logo { font-family: var(--font-serif); font-size: 1.7rem; font-weight: 600; letter-spacing: 0.12em; color: var(--charcoal); cursor: pointer; text-decoration: none; }
+    .nav-logo span { color: var(--rose); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid-gray); text-decoration: none; font-weight: 500; cursor: pointer; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--rose); }
+    .nav-right { display: flex; align-items: center; gap: 1.2rem; }
+    .cart-btn { position: relative; background: none; border: none; cursor: pointer; font-size: 1.3rem; color: var(--charcoal); padding: 4px; }
+    .cart-badge { position: absolute; top: -4px; right: -6px; background: var(--rose); color: #fff; font-size: 0.6rem; font-weight: 700; border-radius: 50%; width: 17px; height: 17px; display: none; align-items: center; justify-content: center; }
+    .cart-badge.visible { display: flex; }
+
+    /* BUTTONS */
+    .btn-primary { background: var(--charcoal); color: #fff; border: none; padding: 14px 32px; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; font-weight: 500; font-family: var(--font-sans); transition: background 0.25s, transform 0.2s; }
+    .btn-primary:hover { background: var(--rose); transform: translateY(-1px); }
+    .btn-outline { background: none; border: 1px solid var(--charcoal); color: var(--charcoal); padding: 13px 28px; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; font-weight: 500; font-family: var(--font-sans); transition: all 0.25s; }
+    .btn-outline:hover { background: var(--charcoal); color: #fff; }
+    .btn-light { background: #fff; color: var(--charcoal); border: none; padding: 14px 32px; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; font-weight: 500; width: fit-content; font-family: var(--font-sans); transition: background 0.25s; }
+    .btn-light:hover { background: var(--blush); }
+
+    /* HERO */
+    .hero { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 68px); }
+    .hero-text { display: flex; flex-direction: column; justify-content: center; padding: 6% 8% 6% 10%; background: var(--cream); }
+    .hero-eyebrow { font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--rose); margin-bottom: 1.2rem; font-weight: 500; }
+    .hero-title { font-family: var(--font-serif); font-size: clamp(2.8rem, 5vw, 4.5rem); font-weight: 300; line-height: 1.1; color: var(--charcoal); margin-bottom: 1.5rem; }
+    .hero-title em { font-style: italic; color: var(--rose); }
+    .hero-subtitle { font-size: 0.95rem; color: var(--mid-gray); line-height: 1.8; max-width: 420px; margin-bottom: 2.5rem; font-weight: 300; }
+    .hero-cta-row { display: flex; gap: 1rem; align-items: center; }
+    .hero-image { position: relative; overflow: hidden; background: var(--blush); }
+    .hero-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 6s ease; }
+    .hero-image:hover img { transform: scale(1.04); }
+    .hero-badge { position: absolute; bottom: 40px; left: -20px; background: #fff; padding: 16px 24px; box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+    .hero-badge p { font-family: var(--font-serif); font-size: 0.95rem; color: var(--charcoal); }
+    .hero-badge span { font-size: 0.65rem; letter-spacing: 0.15em; color: var(--mid-gray); text-transform: uppercase; }
+
+    /* MARQUEE */
+    .marquee-strip { background: var(--charcoal); color: #fff; overflow: hidden; padding: 12px 0; white-space: nowrap; }
+    .marquee-inner { display: inline-block; animation: marquee 22s linear infinite; }
+    .marquee-inner span { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; margin: 0 2.5rem; opacity: 0.85; }
+    .marquee-inner span.dot { color: var(--rose); margin: 0 1rem; }
+    @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* SECTIONS */
+    .section-header { text-align: center; margin-bottom: 3rem; }
+    .section-label { font-size: 0.68rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--rose); font-weight: 500; margin-bottom: 0.7rem; display: block; }
+    .section-title { font-family: var(--font-serif); font-size: clamp(2rem, 3.5vw, 3rem); font-weight: 300; color: var(--charcoal); }
+
+    /* CATEGORIES */
+    .categories { padding: 80px 8%; background: var(--cream); }
+    .cat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+    .cat-card { position: relative; overflow: hidden; cursor: pointer; aspect-ratio: 3/4; }
+    .cat-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .cat-card:hover img { transform: scale(1.06); }
+    .cat-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(44,44,44,0.7) 0%, transparent 55%); display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem; }
+    .cat-name { font-family: var(--font-serif); font-size: 1.35rem; color: #fff; font-weight: 400; }
+    .cat-count { font-size: 0.7rem; color: rgba(255,255,255,0.7); letter-spacing: 0.1em; margin-top: 2px; }
+    .cat-arrow { margin-top: 0.8rem; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: #fff; opacity: 0; transition: opacity 0.3s; }
+    .cat-card:hover .cat-arrow { opacity: 1; }
+
+    /* PRODUCT CARDS */
+    .featured { padding: 80px 8%; background: var(--warm-white); }
+    .product-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+    .product-card { cursor: pointer; transition: transform 0.3s; }
+    .product-card:hover { transform: translateY(-4px); }
+    .product-img { position: relative; overflow: hidden; aspect-ratio: 3/4; background: var(--blush); }
+    .product-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+    .product-card:hover .product-img img { transform: scale(1.05); }
+    .product-tag { position: absolute; top: 12px; left: 12px; background: var(--rose); color: #fff; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 10px; font-weight: 600; }
+    .product-tag.new-tag { background: var(--charcoal); }
+    .product-wishlist { position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.9); border: none; cursor: pointer; width: 34px; height: 34px; border-radius: 50%; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; }
+    .product-card:hover .product-wishlist { opacity: 1; }
+    .product-wishlist:hover { background: var(--rose); color: #fff; }
+    .product-quick-add { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(44,44,44,0.9); color: #fff; border: none; padding: 12px; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; font-weight: 500; font-family: var(--font-sans); transform: translateY(100%); transition: transform 0.3s; }
+    .product-card:hover .product-quick-add { transform: translateY(0); }
+    .product-info { padding: 1rem 0.2rem 0; }
+    .product-brand { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid-gray); }
+    .product-name { font-family: var(--font-serif); font-size: 1.05rem; margin: 4px 0 6px; font-weight: 400; }
+    .product-price { font-size: 0.9rem; font-weight: 600; color: var(--charcoal); }
+    .product-price .old { color: var(--mid-gray); text-decoration: line-through; margin-left: 6px; font-weight: 400; font-size: 0.8rem; }
+
+    /* PROMO BANNER */
+    .promo-banner { display: grid; grid-template-columns: 1fr 1fr; min-height: 440px; background: var(--charcoal); overflow: hidden; }
+    .promo-text { display: flex; flex-direction: column; justify-content: center; padding: 60px 8%; color: #fff; }
+    .promo-text .section-label { color: var(--blush); }
+    .promo-title { font-family: var(--font-serif); font-size: clamp(2rem, 3.5vw, 3.2rem); font-weight: 300; line-height: 1.15; margin: 0.8rem 0 1.2rem; color: #fff; }
+    .promo-title em { font-style: italic; color: var(--blush); }
+    .promo-desc { font-size: 0.88rem; line-height: 1.8; color: rgba(255,255,255,0.65); max-width: 380px; margin-bottom: 2rem; }
+    .promo-image { overflow: hidden; }
+    .promo-image img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+
+    /* FOOTER */
+    footer { background: var(--charcoal); color: rgba(255,255,255,0.7); padding: 60px 8% 30px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+    .footer-brand .nav-logo { color: #fff; display: block; margin-bottom: 1rem; }
+    .footer-brand p { font-size: 0.82rem; line-height: 1.8; max-width: 280px; }
+    .footer-col h4 { color: #fff; font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; }
+    .footer-col a { display: block; font-size: 0.82rem; margin-bottom: 0.5rem; color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+    .footer-col a:hover { color: var(--blush); }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .footer-bottom p { font-size: 0.75rem; }
+
+    /* SHOP PAGE */
+    .shop-hero { background: var(--blush); text-align: center; padding: 60px 5%; }
+    .shop-hero h1 { font-family: var(--font-serif); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; }
+    .shop-hero p { font-size: 0.88rem; color: var(--mid-gray); margin-top: 0.5rem; }
+    .shop-layout { display: grid; grid-template-columns: 240px 1fr; gap: 2.5rem; padding: 3rem 5%; }
+    .sidebar h3 { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1.2rem; color: var(--charcoal); }
+    .filter-section { margin-bottom: 2rem; border-bottom: 1px solid var(--light-gray); padding-bottom: 1.5rem; }
+    .filter-section h4 { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid-gray); margin-bottom: 0.8rem; }
+    .filter-option { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; cursor: pointer; }
+    .filter-option input { accent-color: var(--rose); }
+    .filter-option label { font-size: 0.82rem; color: var(--charcoal); cursor: pointer; }
+    .color-swatches { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .color-swatch { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--light-gray); cursor: pointer; transition: border-color 0.2s; }
+    .color-swatch.active, .color-swatch:hover { border-color: var(--charcoal); }
+    .price-range { width: 100%; accent-color: var(--rose); }
+    .shop-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .result-count { font-size: 0.82rem; color: var(--mid-gray); }
+    .sort-select { border: 1px solid var(--light-gray); padding: 8px 14px; font-size: 0.78rem; background: #fff; color: var(--charcoal); cursor: pointer; font-family: var(--font-sans); outline: none; }
+    .shop-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+
+    /* CART DRAWER */
+    .cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+    .cart-drawer { position: fixed; top: 0; right: -420px; width: 420px; height: 100vh; background: #fff; z-index: 201; transition: right 0.35s cubic-bezier(0.4,0,0.2,1); display: flex; flex-direction: column; box-shadow: -8px 0 40px rgba(0,0,0,0.15); }
+    .cart-drawer.open { right: 0; }
+    .cart-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--light-gray); }
+    .cart-header h2 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; }
+    .cart-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: var(--mid-gray); }
+    .cart-items { flex: 1; overflow-y: auto; padding: 1.2rem 1.5rem; }
+    .cart-empty { text-align: center; padding: 3rem 1rem; }
+    .cart-empty p { font-size: 0.9rem; color: var(--mid-gray); margin-bottom: 1rem; }
+    .cart-item { display: grid; grid-template-columns: 80px 1fr auto; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--warm-white); }
+    .cart-item-img { width: 80px; height: 100px; object-fit: cover; background: var(--blush); }
+    .cart-item-name { font-family: var(--font-serif); font-size: 1rem; margin-bottom: 3px; }
+    .cart-item-meta { font-size: 0.72rem; color: var(--mid-gray); margin-bottom: 8px; }
+    .cart-qty { display: flex; align-items: center; gap: 8px; }
+    .qty-btn { background: var(--warm-white); border: none; width: 26px; height: 26px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; }
+    .qty-num { font-size: 0.85rem; min-width: 20px; text-align: center; }
+    .cart-item-price { font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
+    .cart-remove { background: none; border: none; color: var(--mid-gray); cursor: pointer; font-size: 0.8rem; margin-top: 4px; display: block; }
+    .cart-footer { padding: 1.5rem; border-top: 1px solid var(--light-gray); }
+    .cart-subtotal { display: flex; justify-content: space-between; margin-bottom: 1.2rem; }
+    .cart-subtotal span { font-size: 0.85rem; color: var(--mid-gray); }
+    .cart-subtotal strong { font-size: 1rem; font-weight: 600; }
+    .btn-checkout { width: 100%; }
+
+    /* CHECKOUT PAGE */
+    .checkout-page { background: var(--warm-white); min-height: 100vh; }
+    .checkout-layout { display: grid; grid-template-columns: 1fr 420px; gap: 0; max-width: 1200px; margin: 0 auto; min-height: calc(100vh - 68px); }
+    .checkout-form-col { padding: 3rem 4rem 3rem 3rem; background: #fff; }
+    .checkout-summary-col { padding: 3rem; background: var(--warm-white); border-left: 1px solid var(--light-gray); }
+    .checkout-steps { display: flex; gap: 0; margin-bottom: 2.5rem; align-items: center; }
+    .step { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 8px 0; cursor: pointer; }
+    .step.active { color: var(--rose); border-bottom: 2px solid var(--rose); font-weight: 600; }
+    .step.done { color: var(--mid-gray); }
+    .step-sep { color: var(--light-gray); margin: 0 12px; }
+    .form-section-title { font-family: var(--font-serif); font-size: 1.4rem; font-weight: 400; margin-bottom: 1.5rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 0; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid-gray); margin-bottom: 6px; font-weight: 500; }
+    .form-group input, .form-group select { width: 100%; border: 1px solid var(--light-gray); padding: 11px 14px; font-size: 0.88rem; background: #fff; font-family: var(--font-sans); color: var(--charcoal); outline: none; transition: border-color 0.2s; }
+    .form-group input:focus, .form-group select:focus { border-color: var(--rose); }
+    .payment-methods { display: flex; gap: 0.8rem; margin-bottom: 1.5rem; }
+    .pay-method { flex: 1; border: 2px solid var(--light-gray); padding: 12px; text-align: center; cursor: pointer; transition: border-color 0.2s; }
+    .pay-method.active { border-color: var(--rose); }
+    .pay-method span { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--mid-gray); }
+    .pay-method .pm-icon { font-size: 1.3rem; display: block; margin-bottom: 4px; }
+    .card-icons { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; }
+    .card-icon { width: 40px; height: 26px; background: var(--warm-white); border: 1px solid var(--light-gray); border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; color: var(--mid-gray); }
+    .order-review { background: var(--cream); overflow: hidden; margin-bottom: 1.5rem; }
+    .order-item { display: grid; grid-template-columns: 60px 1fr auto; gap: 1rem; padding: 1rem 1.2rem; border-bottom: 1px solid var(--light-gray); align-items: center; }
+    .order-item:last-child { border-bottom: none; }
+    .order-item-img-wrap { position: relative; width: 60px; height: 75px; }
+    .order-item-img-wrap img { width: 60px; height: 75px; object-fit: cover; display: block; }
+    .order-item-badge { position: absolute; top: -6px; right: -6px; background: var(--mid-gray); color: #fff; border-radius: 50%; width: 18px; height: 18px; font-size: 0.6rem; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+    .order-item-name { font-size: 0.88rem; font-weight: 500; margin-bottom: 3px; }
+    .order-item-meta { font-size: 0.72rem; color: var(--mid-gray); }
+    .order-item-price { font-size: 0.9rem; font-weight: 600; }
+    .summary-line { display: flex; justify-content: space-between; margin-bottom: 0.7rem; font-size: 0.85rem; }
+    .summary-line span:first-child { color: var(--mid-gray); }
+    .summary-divider { border: none; border-top: 1px solid var(--light-gray); margin: 1rem 0; }
+    .summary-total { display: flex; justify-content: space-between; margin-bottom: 1.5rem; }
+    .summary-total span { font-size: 0.9rem; font-weight: 600; }
+    .summary-total .total-price { font-size: 1.3rem; font-family: var(--font-serif); }
+    .promo-input-row { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+    .promo-input-row input { flex: 1; border: 1px solid var(--light-gray); padding: 10px 12px; font-size: 0.82rem; outline: none; font-family: var(--font-sans); }
+    .promo-input-row input:focus { border-color: var(--rose); }
+    .promo-input-row button { background: var(--charcoal); color: #fff; border: none; padding: 10px 18px; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: var(--font-sans); }
+    .secure-badges { display: flex; align-items: center; justify-content: center; gap: 0.8rem; margin-top: 1rem; }
+    .secure-badges span { font-size: 0.68rem; color: var(--mid-gray); letter-spacing: 0.05em; }
+    .step-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--light-gray); }
+    .btn-back { background: none; border: none; color: var(--mid-gray); font-size: 0.78rem; cursor: pointer; letter-spacing: 0.08em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; font-family: var(--font-sans); }
+    .order-success { text-align: center; padding: 4rem 2rem; }
+    .success-icon { font-size: 3.5rem; margin-bottom: 1.5rem; }
+    .success-title { font-family: var(--font-serif); font-size: 2.5rem; font-weight: 300; margin-bottom: 1rem; }
+    .success-num { font-size: 0.82rem; color: var(--mid-gray); margin-bottom: 2rem; }
+    .success-num strong { color: var(--rose); }
+
+    /* TOAST */
+    .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--charcoal); color: #fff; padding: 12px 24px; font-size: 0.82rem; letter-spacing: 0.05em; border-radius: 2px; opacity: 0; transition: all 0.35s; z-index: 300; white-space: nowrap; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* SCROLLBAR */
+    .cart-items::-webkit-scrollbar { width: 4px; }
+    .cart-items::-webkit-scrollbar-track { background: var(--warm-white); }
+    .cart-items::-webkit-scrollbar-thumb { background: var(--light-gray); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-image { height: 50vw; min-height: 320px; }
+      .cat-grid { grid-template-columns: repeat(2, 1fr); }
+      .product-grid { grid-template-columns: repeat(3, 1fr); }
+      .shop-grid { grid-template-columns: repeat(2, 1fr); }
+      .checkout-layout { grid-template-columns: 1fr; }
+      .checkout-summary-col { border-left: none; border-top: 1px solid var(--light-gray); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 0 4%; }
+      .nav-links { display: none; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+      .shop-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .promo-banner { grid-template-columns: 1fr; }
+      .promo-image { height: 260px; }
+      .checkout-form-col { padding: 2rem 1.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="nav-logo" onclick="showPage('home')">LUMI<span>È</span>RE</a>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')">Home</a></li>
+    <li><a onclick="showPage('shop')">Shop</a></li>
+    <li><a onclick="showPage('shop')">New Arrivals</a></li>
+    <li><a onclick="showPage('shop')">Collections</a></li>
+    <li><a onclick="showPage('shop')">Sale</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="toggleCart()">
+      🛍️
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- CART OVERLAY -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <h2>Your Bag</h2>
+    <button class="cart-close" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <p>Your bag is empty.</p>
+      <button class="btn-outline" onclick="toggleCart(); showPage('shop')">Continue Shopping</button>
+    </div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-subtotal">
+      <span>Subtotal</span>
+      <strong id="cartTotal">$0.00</strong>
+    </div>
+    <p style="font-size:0.72rem;color:var(--mid-gray);margin-bottom:1rem">Shipping & taxes calculated at checkout</p>
+    <button class="btn-primary btn-checkout" onclick="toggleCart(); goCheckout()">Checkout — <span id="cartTotalBtn">$0.00</span></button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ══ HOME PAGE ══ -->
+<div class="page active" id="page-home">
+  <section class="hero">
+    <div class="hero-text">
+      <p class="hero-eyebrow">Spring / Summer 2025 Collection</p>
+      <h1 class="hero-title">Dress the<br>woman you<br>want to <em>become</em></h1>
+      <p class="hero-subtitle">Elevated everyday essentials crafted for the modern woman — where timeless silhouettes meet contemporary ease.</p>
+      <div class="hero-cta-row">
+        <button class="btn-primary" onclick="showPage('shop')">Shop Collection</button>
+        <button class="btn-outline" onclick="showPage('shop')">View Lookbook</button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=85&auto=format&fit=crop" alt="Fashion model"/>
+      <div class="hero-badge">
+        <p>Free shipping over $150</p>
+        <span>Worldwide delivery</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee-strip">
+    <div class="marquee-inner">
+      <span>New Arrivals</span><span class="dot">✦</span>
+      <span>Free Returns</span><span class="dot">✦</span>
+      <span>Sustainable Fabrics</span><span class="dot">✦</span>
+      <span>Spring Collection 2025</span><span class="dot">✦</span>
+      <span>Complimentary Gift Wrap</span><span class="dot">✦</span>
+      <span>Members Get 15% Off</span><span class="dot">✦</span>
+      <span>New Arrivals</span><span class="dot">✦</span>
+      <span>Free Returns</span><span class="dot">✦</span>
+      <span>Sustainable Fabrics</span><span class="dot">✦</span>
+      <span>Spring Collection 2025</span><span class="dot">✦</span>
+      <span>Complimentary Gift Wrap</span><span class="dot">✦</span>
+      <span>Members Get 15% Off</span><span class="dot">✦</span>
+    </div>
+  </div>
+
+  <section class="categories">
+    <div class="section-header">
+      <span class="section-label">Shop by Category</span>
+      <h2 class="section-title">Find Your Style</h2>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card" onclick="showPage('shop')">
+        <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80&auto=format&fit=crop" alt="Dresses"/>
+        <div class="cat-overlay"><div class="cat-name">Dresses</div><div class="cat-count">48 styles</div><div class="cat-arrow">Shop Now →</div></div>
+      </div>
+      <div class="cat-card" onclick="showPage('shop')">
+        <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQHW3B0EPFBvKQW3Rsfq8b_TzZYbgcZfM0FLgJ1fEggawHNTtR-4rjJSb8kI2SFhjf_8zR-OPIl0T2UEvsyFb7tJGmtzhUv6r9hwBftQ2b7-sPwWg7l7uNsxVc" alt="Tops"/>
+        <div class="cat-overlay"><div class="cat-name">Tops & Blouses</div><div class="cat-count">72 styles</div><div class="cat-arrow">Shop Now →</div></div>
+      </div>
+      <div class="cat-card" onclick="showPage('shop')">
+        <img src="https://images.unsplash.com/photo-1581338834647-b0fb40704e21?w=600&q=80&auto=format&fit=crop" alt="Trousers"/>
+        <div class="cat-overlay"><div class="cat-name">Trousers</div><div class="cat-count">35 styles</div><div class="cat-arrow">Shop Now →</div></div>
+      </div>
+      <div class="cat-card" onclick="showPage('shop')">
+        <img src="https://images.unsplash.com/photo-1520367445093-50dc08a59d9d?w=600&q=80&auto=format&fit=crop" alt="Outerwear"/>
+        <div class="cat-overlay"><div class="cat-name">Outerwear</div><div class="cat-count">29 styles</div><div class="cat-arrow">Shop Now →</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="featured">
+    <div class="section-header">
+      <span class="section-label">Curated For You</span>
+      <h2 class="section-title">New Arrivals</h2>
+    </div>
+    <div class="product-grid" id="homeProducts"></div>
+    <div style="text-align:center;margin-top:3rem">
+      <button class="btn-outline" onclick="showPage('shop')">View All Products</button>
+    </div>
+  </section>
+
+  <section class="promo-banner">
+    <div class="promo-text">
+      <span class="section-label">Limited Time</span>
+      <h2 class="promo-title">Summer Sale<br><em>Up to 40% off</em></h2>
+      <p class="promo-desc">Discover our end-of-season edit — luxurious pieces reimagined at irresistible prices. Only while stocks last.</p>
+      <button class="btn-light" onclick="showPage('shop')">Shop the Sale</button>
+    </div>
+    <div class="promo-image">
+      <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&q=80&auto=format&fit=crop" alt="Sale"/>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="nav-logo">LUMIÈRE</span>
+        <p>Crafting timeless fashion for the modern woman. Every piece tells a story of elegance, intention, and effortless style.</p>
+      </div>
+      <div class="footer-col"><h4>Shop</h4><a>New Arrivals</a><a>Dresses</a><a>Tops & Blouses</a><a>Trousers</a><a>Outerwear</a><a>Sale</a></div>
+      <div class="footer-col"><h4>Help</h4><a>Size Guide</a><a>Shipping Info</a><a>Returns</a><a>Track Order</a><a>Contact Us</a></div>
+      <div class="footer-col"><h4>Company</h4><a>About Us</a><a>Sustainability</a><a>Careers</a><a>Press</a><a>Affiliates</a></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 LUMIÈRE. All rights reserved.</p>
+      <p>Privacy Policy · Terms of Service</p>
+    </div>
+  </footer>
+</div>
+
+<!-- ══ SHOP PAGE ══ -->
+<div class="page" id="page-shop">
+  <div class="shop-hero">
+    <h1>All Collections</h1>
+    <p>Discover our full range of women's fashion</p>
+  </div>
+  <div class="shop-layout">
+    <aside class="sidebar">
+      <h3>Filter</h3>
+      <div class="filter-section">
+        <h4>Category</h4>
+        <div class="filter-option"><input type="checkbox" checked/><label>All</label></div>
+        <div class="filter-option"><input type="checkbox"/><label>Dresses</label></div>
+        <div class="filter-option"><input type="checkbox"/><label>Tops & Blouses</label></div>
+        <div class="filter-option"><input type="checkbox"/><label>Trousers</label></div>
+        <div class="filter-option"><input type="checkbox"/><label>Outerwear</label></div>
+      </div>
+      <div class="filter-section">
+        <h4>Size</h4>
+        <div class="filter-option"><input type="checkbox"/><label>XS</label></div>
+        <div class="filter-option"><input type="checkbox" checked/><label>S</label></div>
+        <div class="filter-option"><input type="checkbox" checked/><label>M</label></div>
+        <div class="filter-option"><input type="checkbox"/><label>L</label></div>
+        <div class="filter-option"><input type="checkbox"/><label>XL</label></div>
+      </div>
+      <div class="filter-section">
+        <h4>Color</h4>
+        <div class="color-swatches">
+          <div class="color-swatch active" style="background:#2c2c2c" title="Black"></div>
+          <div class="color-swatch" style="background:#fff;border:2px solid #ccc" title="White"></div>
+          <div class="color-swatch" style="background:#c9856a" title="Terracotta"></div>
+          <div class="color-swatch" style="background:#e8d5cb" title="Blush"></div>
+          <div class="color-swatch" style="background:#5c7a6c" title="Sage"></div>
+          <div class="color-swatch" style="background:#3a5068" title="Navy"></div>
+        </div>
+      </div>
+      <div class="filter-section">
+        <h4>Price Range</h4>
+        <input type="range" class="price-range" min="0" max="500" value="350" oninput="document.getElementById('priceVal').textContent='$'+this.value"/>
+        <p style="font-size:0.78rem;color:var(--mid-gray);margin-top:6px">Up to <strong id="priceVal">$350</strong></p>
+      </div>
+    </aside>
+    <div>
+      <div class="shop-top">
+        <p class="result-count" id="shopCount">Showing all products</p>
+        <select class="sort-select"><option>Featured</option><option>Newest First</option><option>Price: Low to High</option><option>Price: High to Low</option><option>Best Selling</option></select>
+      </div>
+      <div class="shop-grid" id="shopProducts"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CHECKOUT PAGE ══ -->
+<div class="page" id="page-checkout">
+  <div class="checkout-layout">
+    <div class="checkout-form-col">
+      <div style="margin-bottom:1.5rem">
+        <a class="nav-logo" onclick="showPage('home')" style="font-size:1.3rem">LUMIÈRE</a>
+      </div>
+      <div class="checkout-steps">
+        <span class="step active" id="step1-tab">Contact</span>
+        <span class="step-sep">›</span>
+        <span class="step" id="step2-tab">Shipping</span>
+        <span class="step-sep">›</span>
+        <span class="step" id="step3-tab">Payment</span>
+      </div>
+
+      <!-- Step 1: Contact -->
+      <div id="checkout-step1">
+        <h2 class="form-section-title">Contact Information</h2>
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="you@example.com" id="co-email"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" placeholder="Sophia"/></div>
+          <div class="form-group"><label>Last Name</label><input type="text" placeholder="Laurent"/></div>
+        </div>
+        <div class="form-group"><label>Phone (Optional)</label><input type="tel" placeholder="+1 (555) 000-0000"/></div>
+        <div class="step-nav">
+          <button class="btn-back" onclick="showPage('shop')">← Back to Shop</button>
+          <button class="btn-primary" onclick="goStep(2)">Continue to Shipping</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Shipping -->
+      <div id="checkout-step2" style="display:none">
+        <h2 class="form-section-title">Shipping Address</h2>
+        <div class="form-group"><label>Street Address</label><input type="text" placeholder="123 Avenue Montaigne"/></div>
+        <div class="form-group"><label>Apt, Suite (Optional)</label><input type="text" placeholder="Apartment 4B"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>City</label><input type="text" placeholder="New York"/></div>
+          <div class="form-group"><label>State / Province</label><input type="text" placeholder="New York"/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>ZIP / Postal Code</label><input type="text" placeholder="10001"/></div>
+          <div class="form-group"><label>Country</label><select><option>United States</option><option>France</option><option>United Kingdom</option><option>India</option><option>Canada</option><option>Australia</option></select></div>
+        </div>
+        <h3 style="font-size:0.88rem;font-weight:600;margin:1.5rem 0 1rem;letter-spacing:0.05em">Shipping Method</h3>
+        <div style="border:1px solid var(--light-gray);overflow:hidden;margin-bottom:1rem">
+          <label style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer;background:#fff;border-bottom:1px solid var(--light-gray)">
+            <span style="display:flex;align-items:center;gap:10px"><input type="radio" name="ship" checked style="accent-color:var(--rose)"/><span style="font-size:0.85rem">Standard Shipping (5–7 days)</span></span>
+            <strong style="font-size:0.85rem">Free</strong>
+          </label>
+          <label style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer;background:#fff;border-bottom:1px solid var(--light-gray)">
+            <span style="display:flex;align-items:center;gap:10px"><input type="radio" name="ship" style="accent-color:var(--rose)"/><span style="font-size:0.85rem">Express Shipping (2–3 days)</span></span>
+            <strong style="font-size:0.85rem">$12.00</strong>
+          </label>
+          <label style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;cursor:pointer;background:#fff">
+            <span style="display:flex;align-items:center;gap:10px"><input type="radio" name="ship" style="accent-color:var(--rose)"/><span style="font-size:0.85rem">Overnight Delivery</span></span>
+            <strong style="font-size:0.85rem">$25.00</strong>
+          </label>
+        </div>
+        <div class="step-nav">
+          <button class="btn-back" onclick="goStep(1)">← Back</button>
+          <button class="btn-primary" onclick="goStep(3)">Continue to Payment</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Payment -->
+      <div id="checkout-step3" style="display:none">
+        <h2 class="form-section-title">Payment</h2>
+        <div class="payment-methods">
+          <div class="pay-method active" onclick="selectPayMethod(this)"><span class="pm-icon">💳</span><span>Card</span></div>
+          <div class="pay-method" onclick="selectPayMethod(this)"><span class="pm-icon">🅿️</span><span>PayPal</span></div>
+          <div class="pay-method" onclick="selectPayMethod(this)"><span class="pm-icon">🍎</span><span>Apple Pay</span></div>
+        </div>
+        <div class="card-icons">
+          <div class="card-icon">VISA</div>
+          <div class="card-icon" style="font-size:0.5rem">MASTER</div>
+          <div class="card-icon">AMEX</div>
+          <div class="card-icon" style="font-size:0.55rem">DISCO</div>
+        </div>
+        <div class="form-group"><label>Card Number</label><input type="text" placeholder="1234 5678 9012 3456" maxlength="19" oninput="formatCard(this)"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Expiry Date</label><input type="text" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)"/></div>
+          <div class="form-group"><label>CVV</label><input type="text" placeholder="•••" maxlength="4"/></div>
+        </div>
+        <div class="form-group"><label>Name on Card</label><input type="text" placeholder="SOPHIA LAURENT"/></div>
+        <div style="display:flex;align-items:center;gap:8px;margin:1rem 0;padding:12px;background:var(--warm-white);border:1px solid var(--light-gray)">
+          <span>🔒</span>
+          <p style="font-size:0.72rem;color:var(--mid-gray)">Your payment information is encrypted with 256-bit SSL security.</p>
+        </div>
+        <div class="step-nav">
+          <button class="btn-back" onclick="goStep(2)">← Back</button>
+          <button class="btn-primary" onclick="placeOrder()" style="background:var(--rose)">Place Order — <span id="finalTotal">$0.00</span></button>
+        </div>
+      </div>
+
+      <!-- Step 4: Success -->
+      <div id="checkout-step4" style="display:none">
+        <div class="order-success">
+          <div class="success-icon">✨</div>
+          <h2 class="success-title">Order Confirmed!</h2>
+          <p class="success-num">Order number: <strong>#LUM-<span id="orderNum"></span></strong></p>
+          <p style="font-size:0.88rem;color:var(--mid-gray);max-width:360px;margin:0 auto 2rem;line-height:1.8">Thank you for your purchase! A confirmation email has been sent to <strong id="confirmedEmail">you</strong>. We'll notify you when your order ships.</p>
+          <button class="btn-primary" onclick="showPage('home'); resetCheckout()">Continue Shopping</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Column -->
+    <div class="checkout-summary-col">
+      <h3 style="font-family:var(--font-serif);font-size:1.3rem;font-weight:400;margin-bottom:1.5rem">Order Summary</h3>
+      <div class="order-review" id="checkoutItems"></div>
+      <div class="promo-input-row">
+        <input type="text" placeholder="Promo code (try LUMIERE15)" id="promoInput"/>
+        <button onclick="applyPromo()">Apply</button>
+      </div>
+      <div class="summary-line"><span>Subtotal</span><span id="co-sub">$0.00</span></div>
+      <div class="summary-line"><span>Shipping</span><span style="color:var(--rose)">Free</span></div>
+      <div class="summary-line"><span>Tax (8%)</span><span id="co-tax">$0.00</span></div>
+      <div class="summary-line" id="co-disc-row" style="display:none"><span style="color:var(--rose)">Promo Discount</span><span id="co-disc" style="color:var(--rose)">-$0.00</span></div>
+      <hr class="summary-divider"/>
+      <div class="summary-total"><span>Total</span><span class="total-price" id="co-total-final">$0.00</span></div>
+      <div class="secure-badges"><span>🔒 Secure</span><span>·</span><span>↩️ Free Returns</span><span>·</span><span>✦ Authentic</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const products = [
+  { id:1,  name:'Silk Slip Dress',       brand:'LUMIÈRE', price:189, oldPrice:null,  tag:'New',  category:'Dresses',       color:'Ivory',     img:'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=600&q=80&auto=format&fit=crop' },
+  { id:2,  name:'Linen Blazer',          brand:'LUMIÈRE', price:245, oldPrice:320,   tag:'Sale', category:'Outerwear',     color:'Camel',     img:'https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600&q=80&auto=format&fit=crop' },
+  { id:3,  name:'Pleated Midi Skirt',    brand:'LUMIÈRE', price:135, oldPrice:null,  tag:'New',  category:'Trousers',      color:'Blush',     img:'https://images.unsplash.com/photo-1617019114583-affb34d1b3cd?w=600&q=80&auto=format&fit=crop' },
+  { id:4,  name:'Draped Chiffon Top',    brand:'LUMIÈRE', price:98,  oldPrice:140,   tag:'Sale', category:'Tops & Blouses',color:'Sage',      img:'https://images.unsplash.com/photo-1564257631407-4deb1f99d992?w=600&q=80&auto=format&fit=crop' },
+  { id:5,  name:'Wide Leg Trousers',     brand:'LUMIÈRE', price:165, oldPrice:null,  tag:'New',  category:'Trousers',      color:'Black',     img:'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&q=80&auto=format&fit=crop' },
+  { id:6,  name:'Floral Wrap Dress',     brand:'LUMIÈRE', price:210, oldPrice:275,   tag:'Sale', category:'Dresses',       color:'Floral',    img:'https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&q=80&auto=format&fit=crop' },
+  { id:7,  name:'Cashmere Cardigan',     brand:'LUMIÈRE', price:295, oldPrice:null,  tag:'New',  category:'Tops & Blouses',color:'Terracotta',img:'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=600&q=80&auto=format&fit=crop' },
+  { id:8,  name:'Classic Trench Coat',   brand:'LUMIÈRE', price:420, oldPrice:550,   tag:'Sale', category:'Outerwear',     color:'Beige',     img:'https://images.unsplash.com/photo-1543076447-215ad9ba6923?w=600&q=80&auto=format&fit=crop' },
+  { id:9,  name:'Satin Mini Dress',      brand:'LUMIÈRE', price:175, oldPrice:null,  tag:'New',  category:'Dresses',       color:'Emerald',   img:'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?w=600&q=80&auto=format&fit=crop' },
+  { id:10, name:'Ribbed Turtleneck',     brand:'LUMIÈRE', price:89,  oldPrice:null,  tag:'New',  category:'Tops & Blouses',color:'Cream',     img:'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?w=600&q=80&auto=format&fit=crop' },
+  { id:11, name:'Tailored Shorts',       brand:'LUMIÈRE', price:115, oldPrice:155,   tag:'Sale', category:'Trousers',      color:'White',     img:'https://images.unsplash.com/photo-1506629082955-511b1aa562c8?w=600&q=80&auto=format&fit=crop' },
+  { id:12, name:'Puff Sleeve Blouse',    brand:'LUMIÈRE', price:125, oldPrice:null,  tag:'New',  category:'Tops & Blouses',color:'White',     img:'https://images.unsplash.com/photo-1554412933-514a83d2f3a8?w=600&q=80&auto=format&fit=crop' },
+];
+
+let cart = [];
+let promoApplied = false;
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 'shop') renderShopProducts();
+  if (id === 'checkout') renderCheckoutSummary();
+}
+
+function productCardHTML(p) {
+  const tagCls = p.tag === 'Sale' ? 'product-tag' : 'product-tag new-tag';
+  const priceHTML = p.oldPrice
+    ? `$${p.price} <span class="old">$${p.oldPrice}</span>`
+    : `$${p.price}`;
+  return `<div class="product-card">
+    <div class="product-img">
+      <img src="${p.img}" alt="${p.name}" loading="lazy"/>
+      <span class="${tagCls}">${p.tag}</span>
+      <button class="product-wishlist" title="Wishlist">♡</button>
+      <button class="product-quick-add" onclick="addToCart(${p.id})">Quick Add</button>
+    </div>
+    <div class="product-info">
+      <p class="product-brand">${p.brand}</p>
+      <p class="product-name">${p.name}</p>
+      <p class="product-price">${priceHTML}</p>
+    </div>
+  </div>`;
+}
+
+function renderHomeProducts() {
+  const el = document.getElementById('homeProducts');
+  if (el) el.innerHTML = products.slice(0,4).map(productCardHTML).join('');
+}
+
+function renderShopProducts() {
+  const el = document.getElementById('shopProducts');
+  const ct = document.getElementById('shopCount');
+  if (el) el.innerHTML = products.map(productCardHTML).join('');
+  if (ct) ct.textContent = `Showing ${products.length} products`;
+}
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  const ex = cart.find(x => x.id === id);
+  if (ex) ex.qty++;
+  else cart.push({...p, qty:1});
+  updateCartUI();
+  showToast(`${p.name} added to bag ✓`);
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(x => x.id !== id);
+  updateCartUI();
+  renderCartDrawer();
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(x => x.id === id);
+  if (!item) return;
+  item.qty = Math.max(1, item.qty + delta);
+  updateCartUI();
+  renderCartDrawer();
+}
+
+function getCartTotal() { return cart.reduce((s, x) => s + x.price * x.qty, 0); }
+function getCartCount() { return cart.reduce((s, x) => s + x.qty, 0); }
+
+function updateCartUI() {
+  const count = getCartCount();
+  const badge = document.getElementById('cartBadge');
+  badge.textContent = count;
+  badge.classList.toggle('visible', count > 0);
+  const total = getCartTotal();
+  document.getElementById('cartTotal').textContent = `$${total.toFixed(2)}`;
+  document.getElementById('cartTotalBtn').textContent = `$${total.toFixed(2)}`;
+  document.getElementById('cartFooter').style.display = cart.length > 0 ? 'block' : 'none';
+  document.getElementById('cartEmpty').style.display = cart.length === 0 ? 'block' : 'none';
+  renderCartDrawer();
+}
+
+function renderCartDrawer() {
+  const container = document.getElementById('cartItems');
+  const emptyDiv = document.getElementById('cartEmpty');
+  const itemsHTML = cart.map(item => `
+    <div class="cart-item">
+      <img class="cart-item-img" src="${item.img}" alt="${item.name}"/>
+      <div>
+        <p class="cart-item-name">${item.name}</p>
+        <p class="cart-item-meta">Size: M · ${item.color}</p>
+        <div class="cart-qty">
+          <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
+          <span class="qty-num">${item.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+        </div>
+        <button class="cart-remove" onclick="removeFromCart(${item.id})">Remove</button>
+      </div>
+      <span class="cart-item-price">$${(item.price * item.qty).toFixed(2)}</span>
+    </div>`).join('');
+  container.innerHTML = itemsHTML;
+  container.appendChild(emptyDiv);
+}
+
+function toggleCart() {
+  document.getElementById('cartOverlay').classList.toggle('open');
+  document.getElementById('cartDrawer').classList.toggle('open');
+}
+
+function goCheckout() { showPage('checkout'); goStep(1); }
+
+function goStep(n) {
+  [1,2,3,4].forEach(i => {
+    const s = document.getElementById(`checkout-step${i}`);
+    if (s) s.style.display = i === n ? 'block' : 'none';
+    const t = document.getElementById(`step${i}-tab`);
+    if (t) { t.classList.remove('active','done'); if (i===n) t.classList.add('active'); if (i<n) t.classList.add('done'); }
+  });
+}
+
+function renderCheckoutSummary() {
+  const c = document.getElementById('checkoutItems');
+  if (!c) return;
+  c.innerHTML = cart.map(item => `
+    <div class="order-item">
+      <div class="order-item-img-wrap">
+        <img src="${item.img}" alt="${item.name}"/>
+        <div class="order-item-badge">${item.qty}</div>
+      </div>
+      <div><p class="order-item-name">${item.name}</p><p class="order-item-meta">${item.color} · Size M</p></div>
+      <span class="order-item-price">$${(item.price*item.qty).toFixed(2)}</span>
+    </div>`).join('');
+  const sub = getCartTotal();
+  const tax = sub * 0.08;
+  document.getElementById('co-sub').textContent = `$${sub.toFixed(2)}`;
+  document.getElementById('co-tax').textContent = `$${tax.toFixed(2)}`;
+  document.getElementById('co-total-final').textContent = `$${(sub+tax).toFixed(2)}`;
+  document.getElementById('finalTotal').textContent = `$${(sub+tax).toFixed(2)}`;
+}
+
+function applyPromo() {
+  if (promoApplied) { showToast('Promo already applied'); return; }
+  const code = document.getElementById('promoInput').value.trim().toUpperCase();
+  if (code === 'LUMIERE15' || code === 'SAVE15') {
+    promoApplied = true;
+    const sub = getCartTotal();
+    const disc = sub * 0.15;
+    const tax = sub * 0.08;
+    const total = sub + tax - disc;
+    document.getElementById('co-disc-row').style.display = 'flex';
+    document.getElementById('co-disc').textContent = `-$${disc.toFixed(2)}`;
+    document.getElementById('co-total-final').textContent = `$${total.toFixed(2)}`;
+    document.getElementById('finalTotal').textContent = `$${total.toFixed(2)}`;
+    showToast('🎉 15% discount applied!');
+  } else { showToast('Invalid promo code'); }
+}
+
+function selectPayMethod(el) {
+  document.querySelectorAll('.pay-method').forEach(m => m.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function formatCard(input) {
+  let v = input.value.replace(/\D/g,'').substring(0,16);
+  input.value = v.replace(/(.{4})/g,'$1 ').trim();
+}
+
+function formatExpiry(input) {
+  let v = input.value.replace(/\D/g,'');
+  if (v.length >= 2) v = v.substring(0,2) + ' / ' + v.substring(2,4);
+  input.value = v;
+}
+
+function placeOrder() {
+  const email = document.getElementById('co-email').value || 'your email';
+  document.getElementById('confirmedEmail').textContent = email;
+  document.getElementById('orderNum').textContent = Math.floor(Math.random()*900000+100000);
+  goStep(4);
+  cart = [];
+  updateCartUI();
+}
+
+function resetCheckout() {
+  promoApplied = false;
+  goStep(1);
+  document.getElementById('promoInput').value = '';
+  document.getElementById('co-disc-row').style.display = 'none';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+renderHomeProducts();
+</script>
+</body>
+</html>
